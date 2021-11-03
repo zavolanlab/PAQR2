@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Run the pipeline on a local machine
-# with singularity containers
+# Run the pipeline on a computational cluster
+# with conda virtual environments
 
 cleanup () {
     rc=$?
@@ -23,8 +23,19 @@ cd "$pipeline_dir"
 snakemake \
     --snakefile="../Snakefile" \
     --configfile="../configs/config.yml" \
-    --use-singularity \
-    --cores=2 \
+    --cluster-config="../configs/cluster_config.json" \
+    --jobscript="../configs/jobscript.sh" \
+    --use-conda \
+    --cores 128 \
+    --local-cores 2 \
     --printshellcmds \
     --verbose \
-    --singularity-args "--no-home --bind ${PWD}/..,/scicore/home/zavolan/GROUP/MAPP"
+    --latency-wait 120 \
+    --cluster \
+    "sbatch \
+    --cpus-per-task={cluster.threads} \
+    --mem={cluster.mem} \
+    --qos={cluster.queue} \
+    --time={cluster.time} \
+    --output={params.LOG_cluster_log}-%j-%N.log \
+    -p [PARTITION]"

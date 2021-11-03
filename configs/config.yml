@@ -18,7 +18,7 @@ PAQ_scripts_dir: "../scripts"
 
 # path for the output directory
 # (relative to the 'execution' directory)
-PAQ_outdir: "../output"
+PAQ_outdir: "output"
 
 # path to the poly(A) site set
 # (sites located on terminal exons with at least two poly(A) sites on the exon

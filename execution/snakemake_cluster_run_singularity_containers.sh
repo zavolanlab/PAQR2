@@ -37,5 +37,5 @@ snakemake \
     --qos={cluster.queue} \
     --time={cluster.time} \
     --output={params.LOG_cluster_log}-%j-%N.log \
-    -p scicore" \
-    --singularity-args "--no-home --bind ${PWD}/..,/scicore/home/zavolan/GROUP/MAPP"
+    -p [PARTITION]" \
+    --singularity-args "--no-home --bind ${PWD}/.."
