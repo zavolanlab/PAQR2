@@ -523,7 +523,7 @@ rule PAQ_filter_on_expression:
 #-------------------------------------------------------------------------------
 # get weighted average exon length
 #-------------------------------------------------------------------------------
-rule weighted_average_exon_length:
+rule PAQ_weighted_avg_exon_length:
     input:
         TSV_filtered_usage = os.path.join(
             "{PAQ_output_dir}",
@@ -546,26 +546,26 @@ rule weighted_average_exon_length:
         LOG_cluster_log = os.path.join(
             "{PAQ_output_dir}",
             "cluster_log",
-            "PAQ_exon_lenghts.log"
+            "PAQ_weighted_avg_exon_length.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_exon_lengths.stdout.log"
+            "PAQ_weighted_avg_exon_length.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_exon_lengths.stderr.log"
+            "PAQ_weighted_avg_exon_length.stderr.log"
         )
 
     benchmark:
         os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_exon_lengths.benchmark.log"
+            "PAQ_weighted_avg_exon_length.benchmark.log"
         )
 
     conda:
@@ -587,7 +587,7 @@ rule weighted_average_exon_length:
 # plot the cumulative distribution for the weighted average exon lengths
 # per sample
 #-------------------------------------------------------------------------------
-rule plot_average_exon_length:
+rule PAQ_plot_average_exon_length:
     ##LOCAL##
     input:
         TSV_exon_lengths = os.path.join(
@@ -607,26 +607,26 @@ rule plot_average_exon_length:
         LOG_cluster_log = os.path.join(
             "{PAQ_output_dir}",
             "cluster_log",
-            "PAQ_plot_exon_lenghts.log"
+            "PAQ_plot_average_exon_length.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_plot_exon_lengths.stdout.log"
+            "PAQ_plot_average_exon_length.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_plot_exon_lengths.stderr.log"
+            "PAQ_plot_average_exon_length.stderr.log"
         )
 
     benchmark:
         os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_plot_exon_lengths.benchmark.log"
+            "PAQ_plot_average_exon_length.benchmark.log"
         )
 
     conda:
@@ -641,3 +641,4 @@ rule plot_average_exon_length:
         --file={input.TSV_exon_lengths} \
         1> {log.LOG_local_stdout} 2> {log.LOG_local_stderr}
         '''
+        

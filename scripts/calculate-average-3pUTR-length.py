@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-"""
-My template:
-"""
+
 
 __date__ = "2016-07-07"
 __author__ = "Ralf Schmidt"

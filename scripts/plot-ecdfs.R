@@ -1,3 +1,9 @@
+## Plot average exon length distribution
+##
+## author: Ralf Schmidt
+## contact email = mihaela.zavolan@unibas.ch
+## license: MIT
+
 suppressPackageStartupMessages(library("optparse"))
 
 ################################################################################
