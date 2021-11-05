@@ -2,6 +2,10 @@
 
 PAQR is a tool that allows the quantification of transcript 3' ends (or poly(A) sites) based on standard RNA-seq data. As input it requires alignment files in BAM format and a bed file with coordinates of known "tandem" poly(A) sites (i.e. poly(A) sites that belong to the same gene). It returns a table of quantified tandem poly(A) sites.
 
+For more information, please refer to the original [PAQR publication][paqr-pub].   
+The repository mentioned in the publication is accessible [here][paqr-old]. Please be aware that that repository is no longer maintained, and the repository you're currently looking at contains the most up-to-date version of PAQR.
+
+
 ## Installation 
 ### 1. Clone the repository
 
@@ -46,7 +50,7 @@ conda activate paqr2
 ## Preparations
 
 ### 1. Create tandem poly(A) sites file
-For poly(A) site quantification and calculation of UTR length changes, PAQR requires a reference of known "tandem" poly(A) sites in bed format with additional columns. This file can be conveniently created with the [tandem PAS pipeline][tpas_repo], which uses the [PolyASite atlas][polyasite-atlas] as a global reference of poly(A) sites. Only poly(A) sites on terminal exons, not overlapping with exons of other transcripts are selected. The columns of the tandem PAS file are as follows:
+For poly(A) site quantification and calculation of UTR length changes, PAQR requires a reference of known "tandem" poly(A) sites in bed format with additional columns. This file can be conveniently created with the [tandem PAS pipeline][tpas-repo], which uses the [PolyASite atlas][polyasite-atlas] as a global reference of poly(A) sites. Only poly(A) sites on terminal exons, not overlapping with exons of other transcripts are selected. The columns of the tandem PAS file are as follows:
 
 | Column | Value | Comments |
 | --- | --- | --- |
@@ -83,7 +87,9 @@ Create a new directory for your analysis within this directory and cd into it. M
 
 [rule-graph]: images/rulegraph.svg
 
-
+## About
+If you're using PAQR in your research, please cite   
+Gruber, A.J., Schmidt, R., Ghosh, S. *et al.* Discovery of physiological and cancer-related regulators of 3′ UTR processing with KAPAC. *Genome Biol* **19**, 44 (2018). [https://doi.org/10.1186/s13059-018-1415-3][paqr-pub]
 
 
 [polyasite-atlas]: <https://polyasite.unibas.ch/atlas>
@@ -94,7 +100,8 @@ Create a new directory for your analysis within this directory and cd into it. M
 [rule-graph]: images/dag.svg
 [snakemake]: <https://snakemake.readthedocs.io/en/stable/>
 [singularity]: <https://sylabs.io/singularity/>
-[singularity-install]: <https://sylabs.io/guides/3.5/admin-guide/installation.html>
+[singularity-install]: <https://sylabs.io/guides/3.8/user-guide/quick_start.html>
 [slurm]: <https://slurm.schedmd.com/documentation.html>
 [ensembl]: <https://www.ensembl.org/index.html>
-[paqr]: <https://github.com/zavolanlab/PAQR_KAPAC>
+[paqr-old]: <https://github.com/zavolanlab/PAQR_KAPAC>
+[paqr-pub]: <https://doi.org/10.1186/s13059-018-1415-3>
