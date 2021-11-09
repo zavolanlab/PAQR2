@@ -90,7 +90,7 @@ iwanthue <- function(n, hmin=0, hmax=360, cmin=0, cmax=180, lmin=0, lmax=100,
 ################################################################################
 ################################################################################
 
-input <- opt$file
+input <- opt$file # tsv with avg exon lengths for all samples. Header = True, first col contains exon
 plotMain <- opt$main
 xlabel <- opt$xlab
 ylabel <- opt$ylab
@@ -154,7 +154,11 @@ if( length(lengthPerExon[[1]][lengthPerExon[[1]]>0]) == 0 ) {
 first_ecdf <- ecdf(exons_gt_0)
 legendValues <- c(length(exons_gt_0))
 
-plot(first_ecdf, do.points = F, verticals = F, lwd=2, main=plotMain, xlab = xlabel, ylab=ylabel, col = rgb(col_matrix[1,1], col_matrix[2,1], col_matrix[3,1], col_matrix[4,1]))
+# Make sure not to crop the x-axis: get minimum x value of whole df
+min_x <- min(apply(lengthPerExon,2,min))
+
+
+plot(first_ecdf, xlim=c(min_x,100), do.points = F, verticals = F, lwd=2, main=plotMain, xlab = xlabel, ylab=ylabel, col = rgb(col_matrix[1,1], col_matrix[2,1], col_matrix[3,1], col_matrix[4,1]))
 used_cols <- c(used_cols, rgb(col_matrix[1,1], col_matrix[2,1], col_matrix[3,1], col_matrix[4,1]) )
 for(i in 2:dim(lengthPerExon)[2]){
     
