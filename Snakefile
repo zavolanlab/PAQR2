@@ -121,11 +121,11 @@ rule PAQ_create_coverages:
         )
 
     output:
-        PKL_pas_coverage = os.path.join(
+        PKL_pas_coverage = temp(os.path.join(
             "{PAQ_output_dir}",
             "pas_coverages",
             "{sample_ID}.pkl"
-        ),
+        )),
         TSV_extensions = os.path.join(
             "{PAQ_output_dir}",
             "pas_coverages",
@@ -217,14 +217,14 @@ rule PAQ_infer_relative_usage:
         )
 
     output:
-        TSV_pas_relative_usages = os.path.join(
+        TSV_pas_relative_usages = temp(os.path.join(
             "{PAQ_output_dir}",
             "tandem_pas_relative_usage.tsv"
-        ),
-        TSV_pas_epxression_values = os.path.join(
+        )),
+        TSV_pas_epxression_values = temp(os.path.join(
             "{PAQ_output_dir}",
             "tandem_pas_expression.tsv"
-        ),
+        )),
         TSV_distal_sites = os.path.join(
             "{PAQ_output_dir}",
             "singular_pas_expression.tsv"
@@ -315,10 +315,10 @@ rule PAQ_relative_pas_positions:
         )
 
     output:
-        TSV_relative_pas_positions = os.path.join(
+        TSV_relative_pas_positions = temp(os.path.join(
             "{PAQ_output_dir}",
             "relative_pas_positions.tsv"
-        )
+        ))
 
     params:
         LOG_cluster_log = os.path.join(
@@ -383,10 +383,10 @@ rule PAQ_normalize_expression:
         )
 
     output:
-        TSV_normalized_expression = os.path.join(
+        TSV_normalized_expression = temp(os.path.join(
             "{PAQ_output_dir}",
             "tandem_pas_expression_normalized.tsv"
-        )
+        ))
 
     params:
         LOG_cluster_log = os.path.join(

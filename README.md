@@ -87,6 +87,17 @@ Create a new directory for your analysis within this directory and cd into it. M
 
 [rule-graph]: images/rulegraph.svg
 
+### Outputs
+For each sample separately:
+- wiggle files of read coverages
+- UTR extensions made if known PAS downstream of annotated exon
+All samples represented in one table:
+- tables of tandem PAS positions
+- table of PAS relative usage
+- table of tandem PAS expression (tpm)
+- table of "singular" PAS, where PAQR could not detect any usage of the PAS's tandem "siblings"
+- CDF plot of weighted average exon lengths 
+
 ## About
 If you're using PAQR in your research, please cite   
 Gruber, A.J., Schmidt, R., Ghosh, S. *et al.* Discovery of physiological and cancer-related regulators of 3′ UTR processing with KAPAC. *Genome Biol* **19**, 44 (2018). [https://doi.org/10.1186/s13059-018-1415-3][paqr-pub]
