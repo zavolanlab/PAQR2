@@ -67,9 +67,16 @@ def main():
         options.tandem_pas_expression, sep="\t"
     ).replace(to_replace=-1.0, value=np.nan)
 
+
     distal_pas_expression = pd.read_csv(
         options.distal_pas_expression, sep="\t"
     ).replace(to_replace=-1.0, value=np.nan)
+    
+    # If singular pas file is empty, the currently used versions of pandas and numpy will set the sums computed below to "Nan" and all expression values are lost. Avoiding this by adding a row filled with zeroes
+    if distal_pas_expression.empty:
+        distal_pas_expression = distal_pas_expression.append({key: 0 for key in list(distal_pas_expression.columns)}, ignore_index=True)
+        
+
 
     samples = tandem_pas_expression.columns.values[10:]
     total_expression = {s: None for s in samples}
@@ -80,6 +87,7 @@ def main():
         total_expression[s] = tandem_pas_expression[s].astype(np.float64).sum(
             skipna=True
         ) + distal_pas_expression[s].astype(np.float64).sum(skipna=True)
+
         tandem_pas_expression[s] = (
             tandem_pas_expression[s].astype(np.float64) / total_expression[s] * 1000000
         )

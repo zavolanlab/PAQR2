@@ -3,7 +3,7 @@
 #   Snakemake pipeline: PAQR
 #   based on: https://github.com/zavolanlab/PAQR_KAPAC
 #
-#   AUTHOR: Maciej_Bak, Ralf_Schmidt
+#   AUTHOR: Maciej_Bak, Ralf_Schmidt, CJ Herrmann
 #   AFFILIATION: University_of_Basel
 #   AFFILIATION: Swiss_Institute_of_Bioinformatics
 #   CONTACT: maciej.bak@unibas.ch
@@ -21,15 +21,7 @@ import pandas as pd
 # local rules
 localrules: PAQ_all, PAQ_create_outdir
 
-def PAQ_parse_config_samples_info():
-    """
-    Return a dict with ordered! lists regarding samples information
-    (from the configfile)
-    """
-    ID_list = sorted(config["PAQ_mapped_samples"].keys())
-    condition_list = [config["PAQ_mapped_samples_conditions"][i] for i in ID_list]
-    samples_dict = {"IDs": ID_list, "conditions": condition_list}
-    return samples_dict
+samples = pd.read_table(config['PAQ_samples_table'], index_col=0, comment='#')
 
 ##############################################################################
 ### Target rule with final output of the pipeline
@@ -117,9 +109,11 @@ rule PAQ_create_coverages:
             "PAQ_outdir"
         ),
         BAM_alignment = lambda wildcards:
-            config["PAQ_mapped_samples"][wildcards.sample_ID],
+                os.path.join(config["PAQ_indir"],
+                samples.loc[wildcards.sample_ID,"bam"]),
         BAI_alignment_index = lambda wildcards:
-            config["PAQ_mapped_samples_indices"][wildcards.sample_ID],
+                os.path.join(config["PAQ_indir"],
+                samples.loc[wildcards.sample_ID,"bai"]),
         BED_pas = config['PAQ_tandem_pas'],
         SCRIPT_ = os.path.join(
             config["PAQ_scripts_dir"],
@@ -206,7 +200,7 @@ rule PAQ_infer_relative_usage:
                 "{sample_ID}.pkl"
             ),
             PAQ_output_dir = config["PAQ_outdir"],
-            sample_ID = PAQ_parse_config_samples_info()["IDs"]
+            sample_ID = samples.index
         ),
         TSV_extensions = expand(
             os.path.join(
@@ -215,7 +209,7 @@ rule PAQ_infer_relative_usage:
                 "{sample_ID}.extensions.tsv"
             ),
             PAQ_output_dir = config["PAQ_outdir"],
-            sample_ID = PAQ_parse_config_samples_info()["IDs"]
+            sample_ID = samples.index
         ),
         SCRIPT_ = os.path.join(
             config["PAQ_scripts_dir"],
@@ -237,8 +231,8 @@ rule PAQ_infer_relative_usage:
         )
 
     params:
-        LIST_sample_conditions = PAQ_parse_config_samples_info()["conditions"],
-        LIST_sample_names = PAQ_parse_config_samples_info()["IDs"],
+        LIST_sample_conditions = samples["condition"].tolist(),
+        LIST_sample_names = samples.index.tolist(),
         INT_read_length = config['PAQ_read_length'],
         INT_min_length_mean_coverage = config['PAQ_min_length_mean_coverage'],
         FLOAT_min_mean_exon_coverage = config['PAQ_min_mean_exon_coverage'],
@@ -523,7 +517,7 @@ rule PAQ_filter_on_expression:
 #-------------------------------------------------------------------------------
 # get weighted average exon length
 #-------------------------------------------------------------------------------
-rule weighted_average_exon_length:
+rule PAQ_weighted_avg_exon_length:
     input:
         TSV_filtered_usage = os.path.join(
             "{PAQ_output_dir}",
@@ -546,26 +540,26 @@ rule weighted_average_exon_length:
         LOG_cluster_log = os.path.join(
             "{PAQ_output_dir}",
             "cluster_log",
-            "PAQ_exon_lenghts.log"
+            "PAQ_weighted_avg_exon_length.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_exon_lengths.stdout.log"
+            "PAQ_weighted_avg_exon_length.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_exon_lengths.stderr.log"
+            "PAQ_weighted_avg_exon_length.stderr.log"
         )
 
     benchmark:
         os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_exon_lengths.benchmark.log"
+            "PAQ_weighted_avg_exon_length.benchmark.log"
         )
 
     conda:
@@ -587,7 +581,7 @@ rule weighted_average_exon_length:
 # plot the cumulative distribution for the weighted average exon lengths
 # per sample
 #-------------------------------------------------------------------------------
-rule plot_average_exon_length:
+rule PAQ_plot_average_exon_length:
     ##LOCAL##
     input:
         TSV_exon_lengths = os.path.join(
@@ -607,26 +601,26 @@ rule plot_average_exon_length:
         LOG_cluster_log = os.path.join(
             "{PAQ_output_dir}",
             "cluster_log",
-            "PAQ_plot_exon_lenghts.log"
+            "PAQ_plot_average_exon_length.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_plot_exon_lengths.stdout.log"
+            "PAQ_plot_average_exon_length.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_plot_exon_lengths.stderr.log"
+            "PAQ_plot_average_exon_length.stderr.log"
         )
 
     benchmark:
         os.path.join(
             "{PAQ_output_dir}",
             "local_log",
-            "PAQ_plot_exon_lengths.benchmark.log"
+            "PAQ_plot_average_exon_length.benchmark.log"
         )
 
     conda:
@@ -641,3 +635,4 @@ rule plot_average_exon_length:
         --file={input.TSV_exon_lengths} \
         1> {log.LOG_local_stdout} 2> {log.LOG_local_stderr}
         '''
+        
