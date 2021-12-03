@@ -80,7 +80,13 @@ Some entries require your editing while most of them you can leave unchanged. Th
 
 
 ## Execution
-Create a new directory for your analysis within this directory and cd into it. Make sure you have the conda environment `paqr2` activated. For your convenience, the directory `execution` contains bash scripts that can be used to start local and slurm runs, using either singularity or conda. In order for the latter to work, you will have to specify the partition to be used in the respective bash scripts at `-p [PARTITION]`.
+Create a new directory for your analysis within this directory and cd into it. Make sure you have the conda environment `paqr2` activated. For your convenience, the directory `execution` contains bash scripts that can be used to start local and slurm runs, using either singularity or conda.
+
+For example, you could run the example config `configs/config.yml` locally with singularity with:
+
+```bash
+bash snakemake_local_run_singularity_containers.sh configs/config.yml
+```
 
 ### Pipeline steps
 ![rule_graph][rule-graph]

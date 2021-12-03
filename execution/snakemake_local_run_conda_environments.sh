@@ -2,11 +2,12 @@
 
 # Run the pipeline on a local machine
 # with conda environments
+# Usage: bash snakemake_local_run_conda_environments.sh ../configs/config.yaml
 
 cleanup () {
     rc=$?
     # rm -rf .snakemake/
-    rm -rf ../output/
+    # rm -rf ../output/
     cd "$user_dir"
     echo "Exit status: $rc"
 }
@@ -22,7 +23,7 @@ cd "$pipeline_dir"
 
 snakemake \
     --snakefile="../Snakefile" \
-    --configfile="../configs/config.yml" \
+    --configfile=$1 \
     --use-conda \
     --cores=2 \
     --printshellcmds \
