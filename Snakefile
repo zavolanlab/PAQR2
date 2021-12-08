@@ -21,6 +21,9 @@ import pandas as pd
 # local rules
 localrules: PAQ_all, PAQ_create_outdir
 
+logs = config["PAQ_logdir"]
+cluster_logs = os.path.join(logs, "cluster_logs")
+
 samples = pd.read_table(config['PAQ_samples_table'], index_col=0, comment='#')
 
 ##############################################################################
@@ -32,26 +35,17 @@ rule PAQ_all:
     Gathering all output
     """
     input:
-        TSV_filtered_expression = expand(
-            os.path.join(
-                "{PAQ_output_dir}",
+        TSV_filtered_expression = os.path.join(
+                config["PAQ_outdir"],
                 "filtered_pas_expression.tsv"
-            ),
-            PAQ_output_dir = config["PAQ_outdir"]
         ),
-        TSV_filtered_pas_positions = expand(
-            os.path.join(
-                "{PAQ_output_dir}",
+        TSV_filtered_pas_positions = os.path.join(
+                config["PAQ_outdir"],
                 "filtered_pas_positions.tsv"
-            ),
-            PAQ_output_dir = config["PAQ_outdir"]
         ),
-        PDF_exon_lengths = expand(
-            os.path.join(
-                "{PAQ_output_dir}",
+        PDF_exon_lengths = os.path.join(
+                config["PAQ_outdir"],
                 "weighted_avg_exon_lengths.pdf"
-            ),
-            PAQ_output_dir = config["PAQ_outdir"]
         )
 
 ##############################################################################
@@ -65,21 +59,15 @@ rule PAQ_create_outdir:
     output:
         TEMP_ = temp(
             os.path.join(
-                "{PAQ_output_dir}",
+                config["PAQ_outdir"],
                 "PAQ_outdir"
             )
         )
 
     params:
-        DIR_output_dir = "{PAQ_output_dir}",
-        LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log"
-        ),
-        LOG_local_log = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log"
-        )
+        DIR_output_dir = config["PAQ_outdir"],
+        LOG_cluster_log = cluster_logs,
+        LOG_local_log = logs
 
     conda:
         "env/bash.yml"
@@ -105,15 +93,13 @@ rule PAQ_create_coverages:
     """
     input:
         TEMP_ = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "PAQ_outdir"
         ),
         BAM_alignment = lambda wildcards:
-                os.path.join(config["PAQ_indir"],
-                samples.loc[wildcards.sample_ID,"bam"]),
+                samples.loc[wildcards.sample_ID,"bam"],
         BAI_alignment_index = lambda wildcards:
-                os.path.join(config["PAQ_indir"],
-                samples.loc[wildcards.sample_ID,"bai"]),
+                samples.loc[wildcards.sample_ID,"bai"],
         BED_pas = config['PAQ_tandem_pas'],
         SCRIPT_ = os.path.join(
             config["PAQ_scripts_dir"],
@@ -122,12 +108,12 @@ rule PAQ_create_coverages:
 
     output:
         PKL_pas_coverage = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "pas_coverages",
             "{sample_ID}.pkl"
         ),
         TSV_extensions = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "pas_coverages",
             "{sample_ID}.extensions.tsv"
         )
@@ -138,28 +124,24 @@ rule PAQ_create_coverages:
         STR_unstranded_flag = lambda wildcards:
             "--unstranded" if config['PAQ_coverage_unstranded'] == "yes" else "",
         LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log",
+            cluster_logs,
             "PAQ_create_coverages.{sample_ID}.log"
         ),
         INT_processes = 8
 
     log:
         LOG_local_stdout = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_create_coverages.{sample_ID}.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_create_coverages.{sample_ID}.stderr.log"
         )
 
     benchmark:
         os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_create_coverages.{sample_ID}.benchmark.log"
         )
 
@@ -195,7 +177,7 @@ rule PAQ_infer_relative_usage:
         BED_pas = config['PAQ_tandem_pas'],
         PKL_pas_coverage = expand(
             os.path.join(
-                "{PAQ_output_dir}",
+                config["PAQ_outdir"],
                 "pas_coverages",
                 "{sample_ID}.pkl"
             ),
@@ -204,7 +186,7 @@ rule PAQ_infer_relative_usage:
         ),
         TSV_extensions = expand(
             os.path.join(
-                "{PAQ_output_dir}",
+                config["PAQ_outdir"],
                 "pas_coverages",
                 "{sample_ID}.extensions.tsv"
             ),
@@ -218,15 +200,15 @@ rule PAQ_infer_relative_usage:
 
     output:
         TSV_pas_relative_usages = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "tandem_pas_relative_usage.tsv"
         ),
         TSV_pas_epxression_values = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "tandem_pas_expression.tsv"
         ),
         TSV_distal_sites = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "singular_pas_expression.tsv"
         )
 
@@ -242,28 +224,24 @@ rule PAQ_infer_relative_usage:
         INT_upstream_cluster_extension = config['PAQ_upstream_cluster_extension'],
         FLOAT_coverage_mse_ratio_limit = config['PAQ_coverage_mse_ratio_limit'],
         LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log",
+            cluster_logs,
             "PAQ_infer_relative_usage.log"
         ),
         INT_processes = 8
 
     log:
         LOG_local_stdout = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_infer_relative_usage.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_infer_relative_usage.stderr.log"
         )
 
     benchmark:
         os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_infer_relative_usage.benchmark.log"
         )
 
@@ -306,7 +284,7 @@ rule PAQ_relative_pas_positions:
     """
     input:
         TSV_pas_epxression_values = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "tandem_pas_expression.tsv"
         ),
         SCRIPT_ = os.path.join(
@@ -316,33 +294,29 @@ rule PAQ_relative_pas_positions:
 
     output:
         TSV_relative_pas_positions = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "relative_pas_positions.tsv"
         )
 
     params:
         LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log",
+            cluster_logs,
             "PAQ_relative_pas_positions.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_relative_pas_positions.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_relative_pas_positions.stderr.log"
         )
 
     benchmark:
         os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_relative_pas_positions.benchmark.log"
         )
 
@@ -370,11 +344,11 @@ rule PAQ_normalize_expression:
     """
     input:
         TSV_pas_epxression_values = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "tandem_pas_expression.tsv"
         ),
         TSV_distal_sites = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "singular_pas_expression.tsv"
         ),
         SCRIPT_ = os.path.join(
@@ -384,33 +358,29 @@ rule PAQ_normalize_expression:
 
     output:
         TSV_normalized_expression = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "tandem_pas_expression_normalized.tsv"
         )
 
     params:
         LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log",
+            cluster_logs,
             "PAQ_normalize_expression.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_normalize_expression.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_normalize_expression.stderr.log"
         )
 
     benchmark:
         os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_normalize_expression.benchmark.log"
         )
 
@@ -440,15 +410,15 @@ rule PAQ_filter_on_expression:
     """
     input:
         TSV_normalized_expression = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "tandem_pas_expression_normalized.tsv"
         ),
         TSV_relative_pas_positions = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "relative_pas_positions.tsv"
         ),
         TSV_relative_pas_usage = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "tandem_pas_relative_usage.tsv"
         ),
         SCRIPT_ = os.path.join(
@@ -458,41 +428,37 @@ rule PAQ_filter_on_expression:
 
     output:
         TSV_filtered_expression = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "filtered_pas_expression.tsv"
         ),
         TSV_filtered_pas_positions = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "filtered_pas_positions.tsv"
         ),
         TSV_filtered_usage = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "filtered_pas_usage.tsv"
         )
 
     params:
         LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log",
+            cluster_logs,
             "PAQ_filter_on_expression.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_filter_on_expression.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_filter_on_expression.stderr.log"
         )
 
     benchmark:
         os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_filter_on_expression.benchmark.log"
         )
 
@@ -520,11 +486,11 @@ rule PAQ_filter_on_expression:
 rule PAQ_weighted_avg_exon_length:
     input:
         TSV_filtered_usage = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "filtered_pas_usage.tsv"
         ),
         TSV_filtered_pas_positions = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "filtered_pas_positions.tsv"
         ),
         SCRIPT_ = os.path.join(
@@ -533,32 +499,28 @@ rule PAQ_weighted_avg_exon_length:
         )
     output:
         TSV_exon_lengths = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "weighted_avg_exon_lengths.tsv"
         )
     params:
         LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log",
+            cluster_logs,
             "PAQ_weighted_avg_exon_length.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_weighted_avg_exon_length.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_weighted_avg_exon_length.stderr.log"
         )
 
     benchmark:
         os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_weighted_avg_exon_length.benchmark.log"
         )
 
@@ -585,7 +547,7 @@ rule PAQ_plot_average_exon_length:
     ##LOCAL##
     input:
         TSV_exon_lengths = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "weighted_avg_exon_lengths.tsv"
         ),
         SCRIPT_ = os.path.join(
@@ -594,32 +556,28 @@ rule PAQ_plot_average_exon_length:
         )
     output:
         PDF_exon_lengths = os.path.join(
-            "{PAQ_output_dir}",
+            config["PAQ_outdir"],
             "weighted_avg_exon_lengths.pdf"
         )
     params:
         LOG_cluster_log = os.path.join(
-            "{PAQ_output_dir}",
-            "cluster_log",
+            cluster_logs,
             "PAQ_plot_average_exon_length.log"
         )
 
     log:
         LOG_local_stdout = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_plot_average_exon_length.stdout.log"
         ),
         LOG_local_stderr = os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_plot_average_exon_length.stderr.log"
         )
 
     benchmark:
         os.path.join(
-            "{PAQ_output_dir}",
-            "local_log",
+            logs,
             "PAQ_plot_average_exon_length.benchmark.log"
         )
 

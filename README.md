@@ -36,7 +36,7 @@ administrator) to do that. This will almost certainly be required if you want to
 
 After installing Singularity, or should you choose not to use containerization but only conda environments, install the remaining dependencies with:
 ```bash
-conda env create -f environment.yml
+conda env create -f install/environment.yml
 ```
 
 ### 4. Activate environment
@@ -80,7 +80,7 @@ Some entries require your editing while most of them you can leave unchanged. Th
 
 
 ## Execution
-Create a new directory for your analysis within this directory and cd into it. Make sure you have the conda environment `paqr2` activated. For your convenience, the directory `execution` contains bash scripts that can be used to start local and slurm runs, using either singularity or conda.
+Create a new directory for your analysis within this directory and cd into it. Make sure you have the conda environment `paqr2` activated. For your convenience, the directory `execute` contains bash scripts that can be used to start local and slurm runs, using either singularity or conda.
 
 For example, you could run the example config `configs/config.yml` locally with singularity with:
 

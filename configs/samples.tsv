@@ -1,3 +1,3 @@
 ID	bam	bai	condition
-Control	ctrl_123.bam	ctrl_123.bam.bai	untreated
-siRNA	sirna_456.bam	sirna_456.bam.bai	treated
+Control	path/to/ctrl_123.bam	path/to/ctrl_123.bam.bai	untreated
+siRNA	path/to/sirna_456.bam	path/to/sirna_456.bam.bai	treated

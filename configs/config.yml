@@ -15,17 +15,16 @@
 # (relative to the 'execution' directory)
 PAQ_scripts_dir: "../scripts"
 
-  # path to tab separated file containing samples info
+# path to tab separated file containing samples info
 # NOTE: alignment files (bam) and their repective indices (bam.bai) must be located in the same directory! 
 PAQ_samples_table: "samples.tsv"
-
-# path to input directory containing the samples files specified in samples table
-PAQ_indir: "input"
-
 
 # path for the output directory
 # (relative to the 'execution' directory)
 PAQ_outdir: "output"
+
+# path for log directory
+PAQ_logdir: "output/logs"
 
 # path to the poly(A) site set
 # (sites located on terminal exons with at least two poly(A) sites on the exon
