@@ -1,6 +1,6 @@
 # PAQR
 
-PAQR is a tool that allows the quantification of transcript 3' ends (or poly(A) sites) based on standard RNA-seq data. As input it requires alignment files in BAM format and a bed file with coordinates of known "tandem" poly(A) sites (i.e. poly(A) sites that belong to the same gene). It returns a table of quantified tandem poly(A) sites.
+PAQR is a tool (implemented as snakemake workflow) that allows the quantification of transcript 3' ends (or poly(A) sites) based on standard RNA-seq data. As input it requires alignment files in BAM format (along with their corresponding ".bai" indices) and a bed file with coordinates of known "tandem" poly(A) sites (i.e. poly(A) sites that belong to the same gene). It returns a table of quantified tandem poly(A) sites.
 
 For more information, please refer to the original [PAQR publication][paqr-pub].   
 The repository mentioned in the publication is accessible [here][paqr-old]. Please be aware that that repository is no longer maintained, and the repository you're currently looking at contains the most up-to-date version of PAQR.
@@ -67,7 +67,7 @@ For poly(A) site quantification and calculation of UTR length changes, PAQR requ
 
 
 ### 2. Ensure sufficient quality of your input samples
-For PAQR to work correctly, it is crucial that the input RNA-seq samples are of good quality. We therefore strongly advise you to run a [TIN-score calculation][tin-repo] on your samples before using them in PAQR. As a rule of thumb, samples shoul have a TIN-score of at least 70 in order for PAQR to give reliable results.
+For PAQR to work correctly, it is crucial that the input RNA-seq samples are of good quality. We therefore strongly advise you to run a [TIN-score calculation][tin-repo] on your samples before using them in PAQR. As a rule of thumb, the Median TIN score across all transcripts in a sample should be at least 70 in order for PAQR to give reliable results.
 
 ### 3. Configure the input parameters
 The file `configs/config.yaml` contains all information about used parameter values, data locations, file names and so on. During a run, all steps of the PAQR pipeline will retrieve their paramter values from this file. It follows the yaml syntax (find more information about yaml and it's syntax [here](http://www.yaml.org/)) making it easy to read and edit. The main principles are:
@@ -77,6 +77,9 @@ The file `configs/config.yaml` contains all information about used parameter val
 
 Some entries require your editing while most of them you can leave unchanged. The comments should give you the information about the meaning of the individual parameters. If you need to change path names please ensure to **use relative instead of absolute path names**.
 
+### 4. Prepare a "samples.tsv"
+This file will contain the names (column header "ID"), conditions (header "condition") and paths (relative to the execution directory)(header "bam") to all your input bam files. For an example see [configs/samples.tsv][sample-tsv]
+> NOTE: PAQR requires `.bam` AND corresponding `.bam.bai` files to be placed alongside in the same directory. It also expects the basenames of the two files to be the same. Thus, only .bam filepaths have to be given in the samples table, and the corresponding .bai filepath is inferred from there.
 
 
 ## Execution
@@ -98,11 +101,12 @@ For each sample separately:
 - wiggle files of read coverages
 - UTR extensions made if known PAS downstream of annotated exon
 All samples represented in one table:
-- tables of tandem PAS positions
-- table of PAS relative usage
-- table of tandem PAS expression (tpm)
-- table of "singular" PAS, where PAQR could not detect any usage of the PAS's tandem "siblings"
-- CDF plot of weighted average exon lengths 
+- tables of tandem PAS positions (tsv; columns: coordinate, relative position within terminal exon)
+- table of PAS relative usage (tsv; columns: chromosome, start, end, PAS ID, score, strand, PAS index on current exon, number of PAS on current exon, exon, gene, relative usage for each sample)
+- table of tandem PAS expression (tsv; columns same as above, tpm instead of relative usage)
+- table of "singular" PAS, where PAQR could not detect any usage of the PAS's tandem "siblings" (tsv; columns same as above)
+- table of weithed average exon lengths (tsv; columns: exon, relative exon length for each sample)
+- CDF plot of weighted average exon lengths (pdf)
 
 ## About
 If you're using PAQR in your research, please cite   
@@ -122,3 +126,4 @@ Gruber, A.J., Schmidt, R., Ghosh, S. *et al.* Discovery of physiological and can
 [ensembl]: <https://www.ensembl.org/index.html>
 [paqr-old]: <https://github.com/zavolanlab/PAQR_KAPAC>
 [paqr-pub]: <https://doi.org/10.1186/s13059-018-1415-3>
+[sample-tsv]: configs/samples.tsv
