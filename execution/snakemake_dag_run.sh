@@ -5,7 +5,7 @@
 
 cleanup () {
     rc=$?
-    rm -rf ../images/dag.pdf
+    # rm -rf ../images/dag.pdf
     cd "$user_dir"
     echo "Exit status: $rc"
 }

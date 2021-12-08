@@ -5,7 +5,7 @@
 
 cleanup () {
     rc=$?
-    rm -rf ../images/rulegraph.svg
+    # rm -rf ../images/rulegraph.svg
     cd "$user_dir"
     echo "Exit status: $rc"
 }
