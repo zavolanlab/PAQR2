@@ -99,7 +99,7 @@ rule PAQ_create_coverages:
         BAM_alignment = lambda wildcards:
                 samples.loc[wildcards.sample_ID,"bam"],
         BAI_alignment_index = lambda wildcards:
-                ".".join(samples.loc[wildcards.sample_ID,"bam"],"bai"),
+                ".".join([samples.loc[wildcards.sample_ID,"bam"],"bai"]),
         BED_pas = config['PAQ_tandem_pas'],
         SCRIPT_ = os.path.join(
             config["PAQ_scripts_dir"],
