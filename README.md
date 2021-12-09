@@ -5,6 +5,10 @@ PAQR is a tool (implemented as snakemake workflow) that allows the quantificatio
 For more information, please refer to the original [PAQR publication][paqr-pub].   
 The repository mentioned in the publication is accessible [here][paqr-old]. Please be aware that that repository is no longer maintained, and the repository you're currently looking at contains the most up-to-date version of PAQR.
 
+> Compatible input data:   
+> By default paired-end sequencing with read1 - reverse orientation, read2 - forward orientation is assumed. If your data is unstranded, you'll have to specify this in the `config.yaml`.   
+> Single-stranded data with the reads in sense direction are processed properly too, but PAQR does not support single-end data in reverse orientation.
+
 
 ## Installation 
 ### 1. Clone the repository
@@ -50,7 +54,7 @@ conda activate paqr2
 ## Preparations
 
 ### 1. Create tandem poly(A) sites file
-For poly(A) site quantification and calculation of UTR length changes, PAQR requires a reference of known "tandem" poly(A) sites in bed format with additional columns. This file can be conveniently created with the [tandem PAS pipeline][tpas-repo], which uses the [PolyASite atlas][polyasite-atlas] as a global reference of poly(A) sites. Only poly(A) sites on terminal exons, not overlapping with exons of other transcripts are selected. The columns of the tandem PAS file are as follows:
+For poly(A) site quantification and calculation of UTR length changes, PAQR requires a reference of known "tandem" poly(A) sites in bed format with additional columns. This file can be conveniently created with the [tandem PAS pipeline][tpas-repo], which uses the [PolyASite atlas][polyasite-atlas] as a global reference of poly(A) sites. Only poly(A) sites on terminal exons, not overlapping with exons of other transcripts are selected. Different files for stranded and unstranded RNA-seq data analysis can be created. The columns of the tandem PAS file are as follows:
 
 | Column | Value | Comments |
 | --- | --- | --- |
