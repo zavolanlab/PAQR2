@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 # Create the DAG (Directed Acyclic Graph) for the workflow
+# Usage: bash snakemake_dag_run.sh ../configs/config.yaml
 
 cleanup () {
     rc=$?
-    rm -rf ../images/dag.pdf
+    # rm -rf ../images/dag.pdf
     cd "$user_dir"
     echo "Exit status: $rc"
 }
@@ -20,7 +21,7 @@ cd "$pipeline_dir"
 
 snakemake \
     --snakefile="../Snakefile" \
-    --configfile="../configs/config.yml" \
+    --configfile=$1 \
     --printshellcmds \
     --dryrun \
     --verbose \

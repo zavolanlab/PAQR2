@@ -2,11 +2,12 @@
 
 # Run the pipeline on a computational cluster
 # with singularity containers
+# Usage: bash snakemake_cluster_run_singularity_containers.sh ../configs/config.yaml
 
 cleanup () {
     rc=$?
     # rm -rf .snakemake/
-    rm -rf ../output/
+    # rm -rf ../output/
     cd "$user_dir"
     echo "Exit status: $rc"
 }
@@ -22,20 +23,18 @@ cd "$pipeline_dir"
 
 snakemake \
     --snakefile="../Snakefile" \
-    --configfile="../configs/config.yml" \
+    --configfile=$1 \
     --cluster-config "../configs/cluster_config.json" \
     --use-singularity \
     --cores 128 \
     --local-cores 2 \
     --printshellcmds \
     --verbose \
-    --latency-wait 120 \
     --cluster \
     "sbatch \
     --cpus-per-task={cluster.threads} \
     --mem={cluster.mem} \
     --qos={cluster.queue} \
     --time={cluster.time} \
-    --output={params.LOG_cluster_log}-%j-%N.log \
-    -p [PARTITION]" \
+    --output={params.LOG_cluster_log}-%j-%N.log" \
     --singularity-args "--no-home --bind ${PWD}/.."

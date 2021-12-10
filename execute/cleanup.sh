@@ -4,7 +4,7 @@
 
 cleanup () {
     rc=$?
-    # rm -rf .snakemake/
+    rm -rf .snakemake/
     rm -rf ../output/
     rm -rf ../images/dag.pdf
     cd "$user_dir"

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 # Run the pipeline on a local machine
-# with conda environments
+# with singularity containers
+# Usage: bash snakemake_local_run_singularity_containers.sh ../configs/config.yaml
 
 cleanup () {
     rc=$?
     # rm -rf .snakemake/
-    rm -rf ../output/
+    # rm -rf ../output/
     cd "$user_dir"
     echo "Exit status: $rc"
 }
@@ -22,8 +23,9 @@ cd "$pipeline_dir"
 
 snakemake \
     --snakefile="../Snakefile" \
-    --configfile="../configs/config.yml" \
-    --use-conda \
+    --configfile=$1 \
+    --use-singularity \
     --cores=2 \
     --printshellcmds \
-    --verbose
+    --verbose \
+    --singularity-args "--no-home --bind ${PWD}/.."

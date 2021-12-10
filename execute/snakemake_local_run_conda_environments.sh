@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-# Run the pipeline on a computational cluster
-# with conda virtual environments
+# Run the pipeline on a local machine
+# with conda environments
+# Usage: bash snakemake_local_run_conda_environments.sh ../configs/config.yaml
 
 cleanup () {
     rc=$?
     # rm -rf .snakemake/
-    rm -rf ../output/
+    # rm -rf ../output/
     cd "$user_dir"
     echo "Exit status: $rc"
 }
@@ -22,20 +23,8 @@ cd "$pipeline_dir"
 
 snakemake \
     --snakefile="../Snakefile" \
-    --configfile="../configs/config.yml" \
-    --cluster-config="../configs/cluster_config.json" \
-    --jobscript="../configs/jobscript.sh" \
+    --configfile=$1 \
     --use-conda \
-    --cores 128 \
-    --local-cores 2 \
+    --cores=2 \
     --printshellcmds \
-    --verbose \
-    --latency-wait 120 \
-    --cluster \
-    "sbatch \
-    --cpus-per-task={cluster.threads} \
-    --mem={cluster.mem} \
-    --qos={cluster.queue} \
-    --time={cluster.time} \
-    --output={params.LOG_cluster_log}-%j-%N.log \
-    -p [PARTITION]"
+    --verbose
