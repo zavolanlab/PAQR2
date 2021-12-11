@@ -1,3 +1,7 @@
+[![ci](https://github.com/zavolanlab/tandem-pas/workflows/CI/badge.svg?branch=main)](https://github.com/zavolanlab/tandem-pas/actions?query=workflow%3ACI)
+[![GitHub issues](https://img.shields.io/github/issues/zavolanlab/PAQR2)](https://github.com/zavolanlab/PAQR2/issues)
+[![GitHub license](https://img.shields.io/github/license/zavolanlab/PAQR2)](https://github.com/zavolanlab/PAQR2/blob/main/LICENSE)
+
 # PAQR
 
 PAQR is a tool (implemented as snakemake workflow) that allows the quantification of transcript 3' ends (or poly(A) sites) based on standard RNA-seq data. As input it requires alignment files in BAM format (along with their corresponding ".bai" indices) and a bed file with coordinates of known "tandem" poly(A) sites (i.e. poly(A) sites that belong to the same gene). It returns a table of quantified tandem poly(A) sites.
