@@ -39,3 +39,39 @@ jobs:
 
       - name: Create Snakemake DAG
         run: bash execute/snakemake_dag_run.sh ../tests/integration/input/config.yml
+
+  integration-conda:
+    needs:
+      - snakemake-graphs
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+
+      - name: Checkout paqr2 repository
+        uses: actions/checkout@v2
+
+      - name: Setup miniconda & paqr2 root env
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.7.4
+          auto-update-conda: false
+          environment-file: install/environment.yml
+          activate-environment: paqr2
+          auto-activate-base: false
+
+      - name: Display all miniconda & env info
+        run: |
+          conda info -a
+          conda list
+
+      - name: Run test script
+        run: bash execute/snakemake_local_run_conda_environments.sh ../tests/integration/input/config.yml
+
+      #- name: Compare output files to what is expected
+      #  run: |
+      #    cmp results/2.0.tandem_pas.tsv tests/integration/2.0.tandem_pas.tsv
+      #    cmp results/2.0.tandem_pas.terminal_exons.tsv tests/integration/2.0.tandem_pas.terminal_exons.tsv
+      #    cmp results/2.0.tandem_pas.terminal_exons.stranded.bed tests/integration/2.0.tandem_pas.terminal_exons.stranded.bed
+      #    cmp results/2.0.tandem_pas.terminal_exons.unstranded.bed tests/integration/2.0.tandem_pas.terminal_exons.unstranded.bed
