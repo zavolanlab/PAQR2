@@ -22,6 +22,7 @@ dependencies:
   - bash=4.4.18
   - python=3.7.4
   - pip=20.0.2
+  - pandas=1.0.1
   - graphviz=2.40.1
   - singularity=3.5.2
   - mamba
