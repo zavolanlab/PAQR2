@@ -81,19 +81,19 @@ jobs:
           cmp output/pas_coverages/GSM1705377.plus.wig tests/integration/output/pas_coverages/GSM1705377.plus.wig
           cmp output/pas_coverages/GSM1705377.pkl tests/integration/output/pas_coverages/GSM1705377.pkl
           # PAQ_infer_relative_usage:
-          cmp output/pas_coverages/tandem_pas_relative_usage.tsv tests/integration/output/pas_coverages/tandem_pas_relative_usage.tsv
-          cmp output/pas_coverages/tandem_pas_expression.tsv tests/integration/output/pas_coverages/tandem_pas_expression.tsv
-          cmp output/pas_coverages/singular_pas_expression.tsv tests/integration/output/pas_coverages/singular_pas_expression.tsv
+          cmp output/tandem_pas_relative_usage.tsv tests/integration/output/tandem_pas_relative_usage.tsv
+          cmp output/tandem_pas_expression.tsv tests/integration/output/tandem_pas_expression.tsv
+          cmp output/singular_pas_expression.tsv tests/integration/output/singular_pas_expression.tsv
           # PAQ_relative_pas_positions:
-          cmp output/pas_coverages/relative_pas_positions.tsv tests/integration/output/pas_coverages/relative_pas_positions.tsv
+          cmp output/relative_pas_positions.tsv tests/integration/output/relative_pas_positions.tsv
           # PAQ_normalize_expression:
-          cmp output/pas_coverages/tandem_pas_expression_normalized.tsv tests/integration/output/pas_coverages/tandem_pas_expression_normalized.tsv
+          cmp output/tandem_pas_expression_normalized.tsv tests/integration/output/tandem_pas_expression_normalized.tsv
           # PAQ_filter_on_expression:
-          cmp output/pas_coverages/filtered_pas_expression.tsv tests/integration/output/pas_coverages/filtered_pas_expression.tsv
-          cmp output/pas_coverages/filtered_pas_positions.tsv tests/integration/output/pas_coverages/filtered_pas_positions.tsv
-          cmp output/pas_coverages/filtered_pas_usage.tsv tests/integration/output/pas_coverages/filtered_pas_usage.tsv
+          cmp output/filtered_pas_expression.tsv tests/integration/output/filtered_pas_expression.tsv
+          cmp output/filtered_pas_positions.tsv tests/integration/output/filtered_pas_positions.tsv
+          cmp output/filtered_pas_usage.tsv tests/integration/output/filtered_pas_usage.tsv
           # PAQ_weighted_avg_exon_length:
-          cmp output/pas_coverages/weighted_avg_exon_lengths.tsv tests/integration/output/pas_coverages/weighted_avg_exon_lengths.tsv
+          cmp output/weighted_avg_exon_lengths.tsv tests/integration/output/weighted_avg_exon_lengths.tsv
           # PAQ_plot_average_exon_length:
           # byte-by-byte comparison of PDF plots should not be executed in the CI;
           # Small differences might arise due to OS architectures ex.
