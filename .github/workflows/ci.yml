@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  snakemake-dag:
+  snakemake-graphs:
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -33,3 +33,9 @@ jobs:
         run: |
           conda info -a
           conda list
+
+      - name: Create Snakemake rulegraph
+        run: bash execute/snakemake_rulegraph_run.sh ../tests/integration/input/config.yml
+
+      - name: Create Snakemake DAG
+        run: bash execute/snakemake_dag_run.sh ../tests/integration/input/config.yml
