@@ -69,9 +69,6 @@ jobs:
       - name: Run test script
         run: bash execute/snakemake_local_run_conda_environments.sh ../tests/integration/input/config.yml
 
-      #- name: Compare output files to what is expected
-      #  run: |
-      #    cmp results/2.0.tandem_pas.tsv tests/integration/2.0.tandem_pas.tsv
-      #    cmp results/2.0.tandem_pas.terminal_exons.tsv tests/integration/2.0.tandem_pas.terminal_exons.tsv
-      #    cmp results/2.0.tandem_pas.terminal_exons.stranded.bed tests/integration/2.0.tandem_pas.terminal_exons.stranded.bed
-      #    cmp results/2.0.tandem_pas.terminal_exons.unstranded.bed tests/integration/2.0.tandem_pas.terminal_exons.unstranded.bed
+      - name: Compare output files to what is expected
+        run: |
+          cmp output/pas_coverages/GSM1705375.extensions.tsv tests/integration/output/pas_coverages/GSM1705375.extensions.tsv
