@@ -71,4 +71,12 @@ jobs:
 
       - name: Compare output files to what is expected
         run: |
+          # PAQ_create_coverages:
           cmp output/pas_coverages/GSM1705375.extensions.tsv tests/integration/output/pas_coverages/GSM1705375.extensions.tsv
+          cmp output/pas_coverages/GSM1705375.minus.tsv tests/integration/output/pas_coverages/GSM1705375.minus.tsv
+          cmp output/pas_coverages/GSM1705375.plus.tsv tests/integration/output/pas_coverages/GSM1705375.plus.tsv
+          cmp output/pas_coverages/GSM1705375.pkl tests/integration/output/pas_coverages/GSM1705375.pkl
+          cmp output/pas_coverages/GSM1705377.extensions.tsv tests/integration/output/pas_coverages/GSM1705377.extensions.tsv
+          cmp output/pas_coverages/GSM1705377.minus.tsv tests/integration/output/pas_coverages/GSM1705377.minus.tsv
+          cmp output/pas_coverages/GSM1705377.plus.tsv tests/integration/output/pas_coverages/GSM1705377.plus.tsv
+          cmp output/pas_coverages/GSM1705377.pkl tests/integration/output/pas_coverages/GSM1705377.pkl
