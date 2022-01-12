@@ -39,7 +39,7 @@ container OR in its own [Conda][conda] virtual environemnt.
 As a consequence, running this workflow has very few individual dependencies. 
 If you want to make use of **container execution**, please [install
 Singularity][singularity-install] in privileged mode, depending
-on your system$^*$. You may have to ask an authorized person (e.g., a systems
+on your system $^*$. You may have to ask an authorized person (e.g., a systems
 administrator) to do that. This will almost certainly be required if you want to run the workflow on a high-performance computing (HPC) cluster. 
 
 After installing Singularity, or should you choose not to use containerization but only conda environments, install the remaining dependencies with:
@@ -47,7 +47,7 @@ After installing Singularity, or should you choose not to use containerization b
 conda env create -f install/environment.yml
 ```
 
-$^*$If you have a Linux machine, as well as root privileges, (e.g., if you plan to run the workflow on your own computer), you can execute the following command to include Singularity in the Conda environment instead:
+$^*$ If you have a Linux machine, as well as root privileges, (e.g., if you plan to run the workflow on your own computer), you can execute the following command to include Singularity in the Conda environment instead:
 ```bash
 conda env create -f install/environment.root.yml
 ```
