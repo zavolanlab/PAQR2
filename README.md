@@ -39,12 +39,17 @@ container OR in its own [Conda][conda] virtual environemnt.
 As a consequence, running this workflow has very few individual dependencies. 
 If you want to make use of **container execution**, please [install
 Singularity][singularity-install] in privileged mode, depending
-on your system. You may have to ask an authorized person (e.g., a systems
+on your system$^*$. You may have to ask an authorized person (e.g., a systems
 administrator) to do that. This will almost certainly be required if you want to run the workflow on a high-performance computing (HPC) cluster. 
 
 After installing Singularity, or should you choose not to use containerization but only conda environments, install the remaining dependencies with:
 ```bash
 conda env create -f install/environment.yml
+```
+
+$^*$If you have a Linux machine, as well as root privileges, (e.g., if you plan to run the workflow on your own computer), you can execute the following command to include Singularity in the Conda environment instead:
+```bash
+conda env create -f install/environment.root.yml
 ```
 
 ### 4. Activate environment
@@ -115,6 +120,12 @@ All samples represented in one table:
 - table of "singular" PAS, where PAQR could not detect any usage of the PAS's tandem "siblings" (tsv; columns same as above)
 - table of weithed average exon lengths (tsv; columns: exon, relative exon length for each sample)
 - CDF plot of weighted average exon lengths (pdf)
+
+### Testing the execution
+This repository contains a small test dataset included for the users to test their installation of PAQR. In order to initiate the test run (with conda environments technology) please navigate to the root of the cloned repository (make sure you have the conda environment `paqr2` activated) and execute the following command:
+```bash
+bash execute/snakemake_local_run_conda_environments.sh ../tests/integration/input/config.yml && rm -rf output
+```
 
 ## About
 If you're using PAQR in your research, please cite   
