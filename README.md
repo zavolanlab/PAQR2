@@ -63,7 +63,7 @@ conda activate paqr2
 ### 5. Testing the execution
 This repository contains a small test dataset included for the users to test their installation of PAQR. In order to initiate the test run (with conda environments technology) please navigate to the root of the cloned repository (make sure you have the conda environment `paqr2` activated) and execute the following command:
 ```bash
-bash execute/snakemake_local_run_conda_environments.sh ../tests/integration/input/config.yml && rm -rf output
+bash execute/run_local_conda_test.sh
 ```
 
 ## Preparations
