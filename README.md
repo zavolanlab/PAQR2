@@ -60,6 +60,12 @@ Activate the Conda environment with:
 conda activate paqr2
 ```
 
+### 5. Testing the execution
+This repository contains a small test dataset included for the users to test their installation of PAQR. In order to initiate the test run (with conda environments technology) please navigate to the root of the cloned repository (make sure you have the conda environment `paqr2` activated) and execute the following command:
+```bash
+bash execute/snakemake_local_run_conda_environments.sh ../tests/integration/input/config.yml && rm -rf output
+```
+
 ## Preparations
 
 ### 1. Create tandem poly(A) sites file
@@ -120,12 +126,6 @@ All samples represented in one table:
 - table of "singular" PAS, where PAQR could not detect any usage of the PAS's tandem "siblings" (tsv; columns same as above)
 - table of weithed average exon lengths (tsv; columns: exon, relative exon length for each sample)
 - CDF plot of weighted average exon lengths (pdf)
-
-### Testing the execution
-This repository contains a small test dataset included for the users to test their installation of PAQR. In order to initiate the test run (with conda environments technology) please navigate to the root of the cloned repository (make sure you have the conda environment `paqr2` activated) and execute the following command:
-```bash
-bash execute/snakemake_local_run_conda_environments.sh ../tests/integration/input/config.yml && rm -rf output
-```
 
 ## About
 If you're using PAQR in your research, please cite   
