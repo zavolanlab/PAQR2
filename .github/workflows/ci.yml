@@ -1,0 +1,157 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  snakemake-graphs:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+
+      - name: Checkout paqr2 repository
+        uses: actions/checkout@v2
+
+      - name: Setup miniconda & paqr2 root env
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.7.4
+          auto-update-conda: false
+          environment-file: install/environment.yml
+          activate-environment: paqr2
+          auto-activate-base: false
+
+      - name: Display all miniconda & env info
+        run: |
+          conda info -a
+          conda list
+
+      - name: Create Snakemake rulegraph
+        run: bash execute/snakemake_rulegraph_run.sh ../tests/integration/input/config.yml
+
+      - name: Create Snakemake DAG
+        run: bash execute/snakemake_dag_run.sh ../tests/integration/input/config.yml
+
+  integration-conda:
+    needs:
+      - snakemake-graphs
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+
+      - name: Checkout paqr2 repository
+        uses: actions/checkout@v2
+
+      - name: Setup miniconda & paqr2 root env
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.7.4
+          auto-update-conda: false
+          environment-file: install/environment.yml
+          activate-environment: paqr2
+          auto-activate-base: false
+
+      - name: Display all miniconda & env info
+        run: |
+          conda info -a
+          conda list
+
+      - name: Run test script
+        run: bash execute/snakemake_local_run_conda_environments.sh ../tests/integration/input/config.yml
+
+      - name: Compare output files to what is expected
+        run: |
+          # PAQ_create_coverages:
+          cmp output/pas_coverages/GSM1705375.extensions.tsv tests/integration/output/pas_coverages/GSM1705375.extensions.tsv
+          cmp output/pas_coverages/GSM1705375.minus.wig tests/integration/output/pas_coverages/GSM1705375.minus.wig
+          cmp output/pas_coverages/GSM1705375.plus.wig tests/integration/output/pas_coverages/GSM1705375.plus.wig
+          cmp output/pas_coverages/GSM1705375.pkl tests/integration/output/pas_coverages/GSM1705375.pkl
+          cmp output/pas_coverages/GSM1705377.extensions.tsv tests/integration/output/pas_coverages/GSM1705377.extensions.tsv
+          cmp output/pas_coverages/GSM1705377.minus.wig tests/integration/output/pas_coverages/GSM1705377.minus.wig
+          cmp output/pas_coverages/GSM1705377.plus.wig tests/integration/output/pas_coverages/GSM1705377.plus.wig
+          cmp output/pas_coverages/GSM1705377.pkl tests/integration/output/pas_coverages/GSM1705377.pkl
+          # PAQ_infer_relative_usage:
+          cmp output/tandem_pas_relative_usage.tsv tests/integration/output/tandem_pas_relative_usage.tsv
+          cmp output/tandem_pas_expression.tsv tests/integration/output/tandem_pas_expression.tsv
+          cmp output/singular_pas_expression.tsv tests/integration/output/singular_pas_expression.tsv
+          # PAQ_relative_pas_positions:
+          cmp output/relative_pas_positions.tsv tests/integration/output/relative_pas_positions.tsv
+          # PAQ_normalize_expression:
+          cmp output/tandem_pas_expression_normalized.tsv tests/integration/output/tandem_pas_expression_normalized.tsv
+          # PAQ_filter_on_expression:
+          cmp output/filtered_pas_expression.tsv tests/integration/output/filtered_pas_expression.tsv
+          cmp output/filtered_pas_positions.tsv tests/integration/output/filtered_pas_positions.tsv
+          cmp output/filtered_pas_usage.tsv tests/integration/output/filtered_pas_usage.tsv
+          # PAQ_weighted_avg_exon_length:
+          cmp output/weighted_avg_exon_lengths.tsv tests/integration/output/weighted_avg_exon_lengths.tsv
+          # PAQ_plot_average_exon_length:
+          # byte-by-byte comparison of PDF plots should not be executed in the CI;
+          # Small differences might arise due to OS architectures ex.
+
+  integration-singularity:
+    needs:
+      - snakemake-graphs
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+
+      - name: Checkout paqr2 repository
+        uses: actions/checkout@v2
+
+      - name: Setup miniconda & paqr2 root env
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.7.4
+          auto-update-conda: false
+          environment-file: install/environment.root.yml
+          activate-environment: paqr2
+          auto-activate-base: false
+
+      - name: Display all miniconda & env info
+        run: |
+          conda info -a
+          conda list
+
+      - name: Run test script
+        run: bash execute/snakemake_local_run_singularity_containers.sh ../tests/integration/input/config.yml
+
+      - name: Compare output files to what is expected
+        run: |
+          # PAQ_create_coverages:
+          cmp output/pas_coverages/GSM1705375.extensions.tsv tests/integration/output/pas_coverages/GSM1705375.extensions.tsv
+          cmp output/pas_coverages/GSM1705375.minus.wig tests/integration/output/pas_coverages/GSM1705375.minus.wig
+          cmp output/pas_coverages/GSM1705375.plus.wig tests/integration/output/pas_coverages/GSM1705375.plus.wig
+          cmp output/pas_coverages/GSM1705375.pkl tests/integration/output/pas_coverages/GSM1705375.pkl
+          cmp output/pas_coverages/GSM1705377.extensions.tsv tests/integration/output/pas_coverages/GSM1705377.extensions.tsv
+          cmp output/pas_coverages/GSM1705377.minus.wig tests/integration/output/pas_coverages/GSM1705377.minus.wig
+          cmp output/pas_coverages/GSM1705377.plus.wig tests/integration/output/pas_coverages/GSM1705377.plus.wig
+          cmp output/pas_coverages/GSM1705377.pkl tests/integration/output/pas_coverages/GSM1705377.pkl
+          # PAQ_infer_relative_usage:
+          cmp output/tandem_pas_relative_usage.tsv tests/integration/output/tandem_pas_relative_usage.tsv
+          cmp output/tandem_pas_expression.tsv tests/integration/output/tandem_pas_expression.tsv
+          cmp output/singular_pas_expression.tsv tests/integration/output/singular_pas_expression.tsv
+          # PAQ_relative_pas_positions:
+          cmp output/relative_pas_positions.tsv tests/integration/output/relative_pas_positions.tsv
+          # PAQ_normalize_expression:
+          cmp output/tandem_pas_expression_normalized.tsv tests/integration/output/tandem_pas_expression_normalized.tsv
+          # PAQ_filter_on_expression:
+          cmp output/filtered_pas_expression.tsv tests/integration/output/filtered_pas_expression.tsv
+          cmp output/filtered_pas_positions.tsv tests/integration/output/filtered_pas_positions.tsv
+          cmp output/filtered_pas_usage.tsv tests/integration/output/filtered_pas_usage.tsv
+          # PAQ_weighted_avg_exon_length:
+          cmp output/weighted_avg_exon_lengths.tsv tests/integration/output/weighted_avg_exon_lengths.tsv
+          # PAQ_plot_average_exon_length:
+          # byte-by-byte comparison of PDF plots should not be executed in the CI;
+          # Small differences might arise due to OS architectures ex.

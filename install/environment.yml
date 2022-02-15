@@ -15,14 +15,17 @@
 name: paqr2
 
 channels:
-  - bioconda
   - conda-forge
+  - defaults
 
 dependencies:
   - bash=4.4.18
-  - snakemake=5.19.0
   - python=3.7.4
-  #- pandas=1.0.1
-  #- graphviz=2.38.0
+  - pip=20.0.2
+  - pandas=1.0.1
+  - graphviz=2.40.1
+  - mamba
+  - pip:
+    - snakemake==6.5.5
 
 ...

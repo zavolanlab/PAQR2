@@ -1,3 +1,7 @@
+[![ci](https://github.com/zavolanlab/tandem-pas/workflows/CI/badge.svg?branch=main)](https://github.com/zavolanlab/tandem-pas/actions?query=workflow%3ACI)
+[![GitHub issues](https://img.shields.io/github/issues/zavolanlab/PAQR2)](https://github.com/zavolanlab/PAQR2/issues)
+[![GitHub license](https://img.shields.io/github/license/zavolanlab/PAQR2)](https://github.com/zavolanlab/PAQR2/blob/main/LICENSE)
+
 # PAQR
 
 PAQR is a tool (implemented as snakemake workflow) that allows the quantification of transcript 3' ends (or poly(A) sites) based on standard RNA-seq data. As input it requires alignment files in BAM format (along with their corresponding ".bai" indices) and a bed file with coordinates of known "tandem" poly(A) sites (i.e. poly(A) sites that belong to the same gene). It returns a table of quantified tandem poly(A) sites.
@@ -35,12 +39,17 @@ container OR in its own [Conda][conda] virtual environemnt.
 As a consequence, running this workflow has very few individual dependencies. 
 If you want to make use of **container execution**, please [install
 Singularity][singularity-install] in privileged mode, depending
-on your system. You may have to ask an authorized person (e.g., a systems
+on your system*. You may have to ask an authorized person (e.g., a systems
 administrator) to do that. This will almost certainly be required if you want to run the workflow on a high-performance computing (HPC) cluster. 
 
 After installing Singularity, or should you choose not to use containerization but only conda environments, install the remaining dependencies with:
 ```bash
 conda env create -f install/environment.yml
+```
+
+*If you have a Linux machine, as well as root privileges, (e.g., if you plan to run the workflow on your own computer), you can execute the following command to include Singularity in the Conda environment instead:
+```bash
+conda env create -f install/environment.root.yml
 ```
 
 ### 4. Activate environment
@@ -49,6 +58,12 @@ Activate the Conda environment with:
 
 ```bash
 conda activate paqr2
+```
+
+### 5. Testing the execution
+This repository contains a small test dataset included for the users to test their installation of PAQR. In order to initiate the test run (with conda environments technology) please navigate to the root of the cloned repository (make sure you have the conda environment `paqr2` activated) and execute the following command:
+```bash
+bash execute/run_local_conda_test.sh
 ```
 
 ## Preparations
