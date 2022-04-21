@@ -126,8 +126,9 @@ rule PAQ_create_coverages:
         LOG_cluster_log = os.path.join(
             cluster_logs,
             "PAQ_create_coverages.{sample_ID}.log"
-        ),
-        INT_processes = 8
+        )
+
+    threads: 8
 
     log:
         LOG_local_stdout = os.path.join(
@@ -158,7 +159,7 @@ rule PAQ_create_coverages:
         --cluster {input.BED_pas} \
         --ds_extension {params.INT_coverage_downstream_extension} \
         --min_dist_exStart2prox {params.INT_min_distance_start_to_proximal} \
-        --processors {params.INT_processes} \
+        --processors {threads} \
         --pickle_out {output.PKL_pas_coverage} \
         {params.STR_unstranded_flag} \
         1> {log.LOG_local_stdout} 2> {log.LOG_local_stderr}
@@ -226,8 +227,9 @@ rule PAQ_infer_relative_usage:
         LOG_cluster_log = os.path.join(
             cluster_logs,
             "PAQ_infer_relative_usage.log"
-        ),
-        INT_processes = 8
+        )
+
+    threads: 8
 
     log:
         LOG_local_stdout = os.path.join(
@@ -269,7 +271,7 @@ rule PAQ_infer_relative_usage:
         --best_break_point_upstream_extension {params.INT_upstream_cluster_extension} \
         --max_downstream_coverage {params.FLOAT_max_mean_coverage} \
         --distal_sites {output.TSV_distal_sites} \
-        --processors {params.INT_processes} \
+        --processors {threads} \
         1> {output.TSV_pas_relative_usages} \
         2> {log.LOG_local_stderr}
         """
