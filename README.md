@@ -1,4 +1,4 @@
-[![ci](https://github.com/zavolanlab/tandem-pas/workflows/CI/badge.svg?branch=main)](https://github.com/zavolanlab/tandem-pas/actions?query=workflow%3ACI)
+[![ci](https://github.com/zavolanlab/PAQR2/workflows/CI/badge.svg?branch=main)](https://github.com/zavolanlab/PAQR2/actions?query=workflow%3ACI)
 [![GitHub issues](https://img.shields.io/github/issues/zavolanlab/PAQR2)](https://github.com/zavolanlab/PAQR2/issues)
 [![GitHub license](https://img.shields.io/github/license/zavolanlab/PAQR2)](https://github.com/zavolanlab/PAQR2/blob/main/LICENSE)
 
