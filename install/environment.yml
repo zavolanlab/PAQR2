@@ -16,7 +16,7 @@ name: paqr2
 
 channels:
   - conda-forge
-  - defaults
+  - main
 
 dependencies:
   - bash=4.4.18
@@ -25,6 +25,7 @@ dependencies:
   - pandas=1.0.1
   - graphviz=2.40.1
   - mamba
+  - tabulate=0.8.10
   - pip:
     - snakemake==6.5.5
 
