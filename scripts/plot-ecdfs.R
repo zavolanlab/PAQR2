@@ -160,6 +160,8 @@ min_x <- min(apply(lengthPerExon,2,min))
 
 plot(first_ecdf, xlim=c(min_x,100), do.points = F, verticals = F, lwd=2, main=plotMain, xlab = xlabel, ylab=ylabel, col = rgb(col_matrix[1,1], col_matrix[2,1], col_matrix[3,1], col_matrix[4,1]))
 used_cols <- c(used_cols, rgb(col_matrix[1,1], col_matrix[2,1], col_matrix[3,1], col_matrix[4,1]) )
+
+if(dim(lengthPerExon)[2]>1){
 for(i in 2:dim(lengthPerExon)[2]){
     
     # Enable empty plot
@@ -174,8 +176,8 @@ for(i in 2:dim(lengthPerExon)[2]){
   used_cols <- c(used_cols, curr_col)
   legendValues <- c(legendValues, length(exons_gt_0))
 }
+}
 
 # plot legend on top left
 legend("topleft", legend = paste(colnames(lengthPerExon), " (", legendValues, ")"), col = used_cols, lwd=2, cex = 0.8, bg = "white")
 dev.off()
-
